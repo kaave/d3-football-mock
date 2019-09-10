@@ -90,6 +90,19 @@ function drawBackground(container: d3.Selection<SVGSVGElement, unknown, HTMLElem
     .attr('width', '100%')
     .attr('height', '100%')
     .attr('fill', `url(#${patternID})`);
+
+  // define arrow head
+  defs
+    .append('marker')
+    .attr('id', 'arrow-head')
+    .attr('refX', 0)
+    .attr('refY', 2)
+    .attr('markerWidth', 4)
+    .attr('markerHeight', 4)
+    .attr('orient', 'auto')
+    .append('path')
+    .attr('d', 'M 0,0 V 4 L4,2 Z')
+    .attr('fill', '#000');
 }
 
 function drawLine(parent: Container, width: number, height: number) {
@@ -360,6 +373,67 @@ function drawLine(parent: Container, width: number, height: number) {
     .attr('stroke-width', lineWidth);
 }
 
+function drawPatterns(parent: Container, width: number, _height: number) {
+  const oneMeterBySize = width / xSize;
+  const patternsContainer = parent.append('g');
+  const lineWidth = width / 100 / 2;
+
+  patternsContainer
+    .append('rect')
+    .attr('x', 10 * oneMeterBySize)
+    .attr('y', 10 * oneMeterBySize)
+    .attr('rx', 1 * oneMeterBySize)
+    .attr('ry', 1 * oneMeterBySize)
+    .attr('width', 20 * oneMeterBySize)
+    .attr('height', 30 * oneMeterBySize)
+    .attr('fill', '#fff9')
+    .attr('stroke', '#000')
+    .attr('stroke-width', lineWidth);
+
+  patternsContainer
+    .append('rect')
+    .attr('x', 40 * oneMeterBySize)
+    .attr('y', 50 * oneMeterBySize)
+    .attr('rx', 0.5 * oneMeterBySize)
+    .attr('ry', 0.5 * oneMeterBySize)
+    .attr('width', 30 * oneMeterBySize)
+    .attr('height', 10 * oneMeterBySize)
+    .attr('fill', '#0003')
+    .attr('stroke', '#000')
+    .attr('stroke-width', lineWidth)
+    .attr('stroke-dasharray', '5');
+
+  patternsContainer
+    .append('circle')
+    .attr('cx', 5 * oneMeterBySize)
+    .attr('cy', 5 * oneMeterBySize)
+    .attr('r', oneMeterBySize * 4)
+    .attr('fill', '#f006')
+    .attr('stroke', '#ccc')
+    .attr('stroke-width', lineWidth);
+
+  patternsContainer
+    .append('ellipse')
+    .attr('cx', 45 * oneMeterBySize)
+    .attr('cy', 70 * oneMeterBySize)
+    .attr('rx', oneMeterBySize * 4)
+    .attr('ry', oneMeterBySize * 9)
+    .attr('fill', '#00f6')
+    .attr('stroke', '#00f')
+    .attr('stroke-width', lineWidth);
+
+  patternsContainer
+    .append('line')
+    .attr('x1', 60 * oneMeterBySize)
+    .attr('y1', 30 * oneMeterBySize)
+    .attr('x2', 20 * oneMeterBySize)
+    .attr('y2', 55 * oneMeterBySize)
+    .attr('fill', 'none')
+    .attr('stroke', '#000')
+    .attr('stroke-width', lineWidth)
+    .attr('marker-end', 'url(#arrow-head)');
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   // set the dimensions and margins of the graph
   const { width, height } = getSize();
@@ -378,6 +452,10 @@ window.addEventListener('DOMContentLoaded', () => {
   // add in the line group
   const inTheLine = svg.append('g').attr('transform', `translate(${marginHorizontalPx}, ${marginVerticalPx})`);
   drawLine(inTheLine, width, height);
+
+  // draw patterns
+  const patternsParent = svg.append('g').attr('transform', `translate(${marginHorizontalPx}, ${marginVerticalPx})`);
+  drawPatterns(patternsParent, width, height);
 
   // create X axis
   const xAxis = d3
