@@ -486,6 +486,23 @@ window.addEventListener('DOMContentLoaded', () => {
     .attr('stroke', '#fff')
     .attr('stroke-width', rational / 4);
 
+  const fontSize = width / 40;
+  const texts = inTheLine
+    .append('g')
+    .attr('class', 'texts')
+    .selectAll('text')
+    .data(initialData)
+    .enter()
+    .append('text')
+    .attr('x', d => xAxis(d.x))
+    .attr('y', d => yAxis(d.y) + fontSize * 0.5)
+    .attr('fill', '#fff')
+    .attr('stroke', 'none')
+    .attr('text-anchor', 'middle')
+    .attr('font-size', fontSize)
+    .attr('style', `font-family: sans-serif; font-weight: 700`)
+    .text((_, i) => i + 1);
+
   setInterval(() => {
     const data = new Date().getSeconds() % 2 === 0 ? positions4213 : positions442;
 
@@ -496,5 +513,13 @@ window.addEventListener('DOMContentLoaded', () => {
       .ease(d3.easeQuadOut)
       .attr('cx', d => xAxis(d.x))
       .attr('cy', d => yAxis(d.y));
+
+    texts
+      .data(data)
+      .transition()
+      .duration(400)
+      .ease(d3.easeQuadOut)
+      .attr('x', d => xAxis(d.x))
+      .attr('y', d => yAxis(d.y) + fontSize * 0.5);
   }, 1000);
 });
